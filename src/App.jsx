@@ -39,6 +39,7 @@ function AppRoutes() {
           path="/make-a-post"
           element={user ? <MakeAPost /> : <Navigate to="/log-in" />}
         />
+        {/*if the user is not logged in, redirect to log in page*/}
 
         <Route path="/log-in" element={<LogIn />} />
         <Route path="/sign-up" element={<SignUp />} />
