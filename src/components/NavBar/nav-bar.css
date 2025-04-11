@@ -17,7 +17,7 @@
   grid-template-columns: 1fr 1fr 1fr;
   place-items: center;
   padding: 30px 0px;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
   position: relative;
 }
 
@@ -45,9 +45,8 @@
   cursor: pointer;
 }
 
-.title{
+.title {
   font-family: "Cinzel", serif;
-
 }
 
 /* Responsive styles */
@@ -55,7 +54,6 @@
   .nav-container {
     padding: 20px;
     grid-template-columns: 1fr;
-
   }
 
   .inner-nav {
