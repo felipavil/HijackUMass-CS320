@@ -52,7 +52,6 @@ npm run dev
 This runs the Vite dev server (usually at http://localhost:5173).
 
 ## 🛠️ Contributing Guide
-Want to contribute to this project? Here's how to do it step-by-step:
 
 ### 1. Pull the Latest Code
 Make sure you're up to date with the main branch:
