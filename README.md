@@ -28,12 +28,7 @@ npm install
 ```
 
 ### 3. Set up environment variables
-Create a .env file inside the /server folder (Nina share the env vars)
-
-✅ Updated Running the App Section
-markdown
-Copy
-Edit
+Create a .env file inside the /server folder (the content of the file is shared on slack)
 
 ## 🚀 Running the App
 
