@@ -1,0 +1,11 @@
+.outer-container{
+    border: 3px solid #881c1c;
+    border-radius: 7px;
+    padding: 20px;
+    width: calc(100%-20px);
+    min-width: max(270px, 45vw);
+    color: #881c1c;
+    font-family: "Montserrat", sans-serif;
+    margin: 40px 0px;
+}
+

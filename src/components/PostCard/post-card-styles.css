@@ -1,0 +1,12 @@
+.post-card-container, .post-card-container > select, .post-card-container>option{
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.post-card-container > select{
+    border: 2px  solid transparent;
+    border-radius: 2px;
+    background-color: var(--white);
+    color: var(--red);
+    padding: 2px 5px; 
+}

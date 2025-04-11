@@ -1,0 +1,37 @@
+.profile-img{
+    width: 30px;
+    height: 30px;
+    display: inline;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    transition: border 0.3s ease-in-out;
+
+}
+
+.img-container{
+    font-size: 0;
+}
+.profile-img:hover{
+    border: 2px solid var(--red);
+    
+}
+
+.user-name{
+    background-color: var(--red);
+    color: var(--white);
+    font-family: "Montserrat", sans-serif;
+    border: none;
+    border-radius: 20px;
+    padding: 1px 20px;
+    font-weight: bold;
+    border: 2px solid transparent;
+    transition: background-color 0.3s ease-in-out;
+    transition: color 0.3s ease-in-out;
+    
+}
+
+.user-name:hover{
+    background-color: var(--white);
+    color: var(--red);
+    border: 2px solid var(--red);
+}
