@@ -44,15 +44,15 @@ In one terminal window/tab:
 ```bash
 cd server
 node index.js
-This will start your Express backend (e.g. on http://localhost:3000).
 ```
+This will start your Express backend (e.g. on http://localhost:3000).
+
 ### 2. Start the frontend (React)
 In a second terminal window/tab:
 
 ```bash
-Copy
-Edit
+cd HijackUMass-CS320/
 npm run dev
-This runs the Vite dev server (usually at http://localhost:5173).
 ```
+This runs the Vite dev server (usually at http://localhost:5173).
 
