@@ -20,7 +20,7 @@ export default function FilterBar(props) {
       from: "UMass",
       to: "Logan Airport",
       date: "Thursday 4/10/25",
-      time:"All day",
+      time: "All day",
     },
 
     {
@@ -29,8 +29,8 @@ export default function FilterBar(props) {
       from: "UMass",
       to: "Smith College",
       date: "Thursday 4/10/25",
-      time:"Afternoon",
-    }
+      time: "Afternoon",
+    },
   ]; //make up filter result for testing, will add backend
 
   const handleSubmit = (e) => {
@@ -61,7 +61,6 @@ export default function FilterBar(props) {
         <input type="submit" value="Filter" />
       </form>
 
-      
       {/* <div className={`filter-result ${isFilter? "active" : ""}`}> */}
       <div className="filter-result active">
         {filterResult.map((result) => (

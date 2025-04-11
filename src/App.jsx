@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 import { UserProvider } from "./context/UserContext";
 import Home from "./pages/Home";
 import NeedARide from "./pages/NeedARide";
@@ -16,7 +16,7 @@ import { useUser } from "./context/UserContext";
 function App() {
   return (
     <Router>
-      <UserProvider> 
+      <UserProvider>
         {/* anything wrapped in UserProvider can access user info */}
         <AppRoutes />
       </UserProvider>
@@ -25,13 +25,11 @@ function App() {
 }
 
 function AppRoutes() {
-
   const { user } = useUser();
 
-   return (
-
+  return (
     <>
-      <NavBar/>
+      <NavBar />
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -39,7 +37,7 @@ function AppRoutes() {
         <Route path="/have-a-ride" element={<HaveARide />} />
         <Route
           path="/make-a-post"
-          element={user ? <MakeAPost/> : <Navigate to="/log-in" />}
+          element={user ? <MakeAPost /> : <Navigate to="/log-in" />}
         />
 
         <Route path="/log-in" element={<LogIn />} />
@@ -47,12 +45,10 @@ function AppRoutes() {
 
         <Route path="/profile" element={<Profile />} />
         <Route path="/fail-log-in" element={<FailLogin />} />
-
       </Routes>
 
       <Footer />
-
-      </>
+    </>
   );
 }
 

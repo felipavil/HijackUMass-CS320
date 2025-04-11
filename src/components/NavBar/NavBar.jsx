@@ -52,37 +52,36 @@ export default function Home() {
             </Link>{" "}
           </div>
         </div>
-        {user === null? 
+        {user === null ? (
           <div className={`nav-links ${menuOpen ? "active" : ""}`}>
-          <div className="inner ">
-            <Link className="link white-button large-button" to="/log-in">
-              Log In
-            </Link>{" "}&emsp;
-            <Link className="link white-button" to="/sign-up">
-              Sign Up
-            </Link>{" "}
+            <div className="inner ">
+              <Link className="link white-button large-button" to="/log-in">
+                Log In
+              </Link>{" "}
+              &emsp;
+              <Link className="link white-button" to="/sign-up">
+                Sign Up
+              </Link>{" "}
+            </div>
           </div>
-        </div>
-        
-        : <>
-        <div className={`nav-links ${menuOpen ? "active" : ""}`}>
-          <div className="inner ">
-          <Link className="link white-button" to="/profile">
-              Hello {user.displayName}
-            </Link>{" "}&emsp;
-            <Link className="link white-button" to="http://localhost:3000/logout">
-              Log Out
-            </Link>{" "}
-          </div>
-        </div>
-          
-            
-
-
-          
-        </>}
-        
-        
+        ) : (
+          <>
+            <div className={`nav-links ${menuOpen ? "active" : ""}`}>
+              <div className="inner ">
+                <Link className="link white-button" to="/profile">
+                  Hello {user.displayName}
+                </Link>{" "}
+                &emsp;
+                <Link
+                  className="link white-button"
+                  to="http://localhost:3000/logout"
+                >
+                  Log Out
+                </Link>{" "}
+              </div>
+            </div>
+          </>
+        )}
       </nav>
     </div>
   );

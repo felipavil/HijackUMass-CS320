@@ -24,7 +24,7 @@ export default function PostCard() {
         A RIDE
       </div>
 
-      <PostInnerCard isHaveARide={postType === "have"}/>
+      <PostInnerCard isHaveARide={postType === "have"} />
     </div>
   );
 }

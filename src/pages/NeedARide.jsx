@@ -4,7 +4,7 @@ export default function NeedARide() {
   return (
     <div className="center-item">
       <h1>NEED A RIDE?</h1>
-      <FilterBar isHaveARide={false}/>
+      <FilterBar isHaveARide={false} />
       <SuggestionCard />
     </div>
   );
