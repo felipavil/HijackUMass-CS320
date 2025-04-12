@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+
+// Help keep the user information among all the pages, so that developer doesn't have to pass the info as props everytime
 // Create the context
 export const UserContext = createContext();
 

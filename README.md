@@ -51,3 +51,40 @@ npm run dev
 ```
 This runs the Vite dev server (usually at http://localhost:5173).
 
+## 🛠️ Contributing Guide
+
+### 1. Pull the Latest Code
+Make sure you're up to date with the main branch:
+
+```bash
+git checkout main
+git pull origin main
+```
+
+### 2. Create a New Branch
+Create and switch to a new branch for your work:
+
+```bash
+git checkout -b your-branch-name-please-replace
+```
+Replace your-feature-name with something short and meaningful, like fix-login-bug or add-footer.
+
+### 3. Make Your Changes
+Now make changes to the code in your new branch. Once you're done:
+
+### 4. Add & Commit Your Changes
+```bash
+git add .
+git commit -m "Describe what you changed here"
+```
+
+### 5. Push Your Branch to GitHub
+```bash
+git push origin your-branch-name-please-replace
+```
+### 6. Open a Pull Request (PR)
+Go to the GitHub repo: https://github.com/felipavil/HijackUMass-CS320
+
+GitHub will suggest creating a pull request from your branch
+
+Add a title and description, then submit!
