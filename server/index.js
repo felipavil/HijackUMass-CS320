@@ -78,10 +78,6 @@ app.get('/logout', (req, res) => {
   });
 });
 
-app.get('/log-in', (req, res)=>{
-  res.send("hi your in")
-})
-
 app.get('/fail-log-in', (req, res)=>{
   res.redirect("http://localhost:5173/fail-log-in")
 })
