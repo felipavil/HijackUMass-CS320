@@ -10,6 +10,8 @@ import {
 } from 'firebase/firestore';
 import { useUser } from '../context/UserContext'; // adjust the path if needed
 
+
+
 export default function Chat() {
   const { user } = useUser(); // your custom user context
   const [message, setMessage] = useState('');
