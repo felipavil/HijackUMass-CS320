@@ -12,6 +12,7 @@ import Footer from "./components/Footer";
 import NavBar from "./components/NavBar/NavBar";
 import FailLogin from "./pages/FailLogin";
 import { useUser } from "./context/UserContext";
+import PlayGround from "./pages/PlayGround";
 
 function App() {
   return (
@@ -46,6 +47,8 @@ function AppRoutes() {
 
         <Route path="/profile" element={<Profile />} />
         <Route path="/fail-log-in" element={<FailLogin />} />
+        <Route path="/play-ground" element={<PlayGround />} />
+
       </Routes>
 
       <Footer />
