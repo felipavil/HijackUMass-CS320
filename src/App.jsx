@@ -14,6 +14,7 @@ import FailLogin from "./pages/FailLogin";
 import { useUser } from "./context/UserContext";
 import PlayGround from "./pages/PlayGround";
 
+
 function App() {
   return (
     <Router>
@@ -27,7 +28,7 @@ function App() {
 
 function AppRoutes() {
   const { user } = useUser();
-
+  console.log(user);
   return (
     <>
       <NavBar />
