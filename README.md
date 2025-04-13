@@ -28,7 +28,18 @@ npm install
 ```
 
 ### 3. Set up environment variables
-Create a .env file inside the /server folder (the content of the file is shared on slack)
+To run this project locally, you need to configure environment variables.
+
+1. Copy the example .env file (MacOS):
+```bash
+cp .env.example .env
+```
+If you're on Windows:
+
+```bash
+copy .env.example .env
+```
+Then fill in the .env posted on Slack (or somewhere else we agreed to)
 
 ## 🚀 Running the App
 
