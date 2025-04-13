@@ -29,6 +29,7 @@ npm install
 
 ### 3. Set up environment variables
 To run this project locally, you need to configure environment variables.
+There are two .env files, one in the root, one in /server.
 
 1. Copy the example .env file (MacOS):
 ```bash
