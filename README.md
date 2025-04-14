@@ -63,6 +63,40 @@ npm run dev
 ```
 This runs the Vite dev server (usually at http://localhost:5173).
 
+## 🗃️ Database Setup
+
+### Prerequisites
+
+- **PostgreSQL**: Ensure PostgreSQL is installed on your machine.  
+  For installation instructions, visit [PostgreSQL Downloads](https://www.postgresql.org/download/).
+
+### Create the Databases
+
+Open a terminal and run the following commands to create the databases:
+
+```bash
+For production (or main testing)
+createdb carpool
+
+For demo or additional testing
+createdb carpool_demo
+
+Run the following commands from the project root (or wherever the SQL files are located):
+
+```bash
+psql -d carpool -f carpool.sql
+psql -d carpool_demo -f carpool_demo.sql
+
+Then execute SQL queries such as:
+
+SELECT * FROM users;
+SELECT * FROM posts;
+SELECT * FROM matches;
+SELECT * FROM ride_history;
+SELECT * FROM reviews;
+
+You should see example users like Alice Rider and Bob Driver, along with their associated posts and matches.
+
 ## 🛠️ Contributing Guide
 
 ### 1. Pull the Latest Code
