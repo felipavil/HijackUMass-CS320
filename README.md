@@ -75,7 +75,7 @@ This runs the Vite dev server (usually at http://localhost:5173).
 Open a terminal and run the following commands to create the databases:
 
 ```bash
-For production (or main testing)
+# For production (or main testing)
 createdb carpool
 
 For demo or additional testing
@@ -96,7 +96,7 @@ SELECT * FROM ride_history;
 SELECT * FROM reviews;
 
 You should see example users like Alice Rider and Bob Driver, along with their associated posts and matches.
-
+```
 ## 🛠️ Contributing Guide
 
 ### 1. Pull the Latest Code
