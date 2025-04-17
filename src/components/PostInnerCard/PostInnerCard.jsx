@@ -4,7 +4,7 @@ import { CalendarIcon, ClockIcon, LocationIcon, MoneyIcon } from "../Icons";
 import TimeDropdown from "../TimeDropDown";
 import { useUser } from "../../context/UserContext";
 export default function PostInnerCard(props) {
-  const {user} = useUser();
+  const { user } = useUser();
   const name = user.displayName;
 
   var isHaveARide = props.isHaveARide;
@@ -90,7 +90,7 @@ export default function PostInnerCard(props) {
                 className="post-input"
               />
             </div>
-            <input type="submit" value="Publish!" className="red-button "/>
+            <input type="submit" value="Publish!" className="red-button " />
           </form>
         </div>
       </div>

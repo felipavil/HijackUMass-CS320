@@ -8,12 +8,12 @@ import {
   onSnapshot,
   serverTimestamp,
 } from 'firebase/firestore';
-import { useUser } from '../context/UserContext'; // adjust the path if needed
+import { useUser } from '../context/UserContext'; 
 
 
 
 export default function Chat() {
-  const { user } = useUser(); // your custom user context
+  const { user } = useUser(); 
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
 
