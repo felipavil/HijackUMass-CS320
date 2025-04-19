@@ -21,7 +21,6 @@ export default function Chat({ id }) {
   console.log("your id", id);
 
   useEffect(() => {
-
     // const messagesRef = collection(db, "conversations");
     // const q = query(messagesRef, orderBy("lastUpdated", "desc"));
     if (!id) return;
@@ -44,6 +43,8 @@ export default function Chat({ id }) {
     // }
     // fetchData();
 
+    console.log("for testing purpose");
+
     return () => unsubscribe();
   }, [id]);
 
@@ -52,14 +53,11 @@ export default function Chat({ id }) {
     e.preventDefault();
     if (!message.trim() || !user) return;
 
-    await addDoc(
-      collection(db, "conversations", id, "messages"),
-      {
-        senderID: "1",
-        createdAt: serverTimestamp(),
-        text: message
-      }
-    );
+    await addDoc(collection(db, "conversations", id, "messages"), {
+      senderID: "1",
+      createdAt: serverTimestamp(),
+      text: message,
+    });
 
     setMessage("");
   };
