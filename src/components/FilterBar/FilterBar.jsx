@@ -1,12 +1,11 @@
 import { useState } from "react";
 import InnerCard from "../InnerCard/InnerCard";
 import "./filter-bar.css";
-export default function FilterBar(props) {
+export default function FilterBar({ isHaveARide }) {
   const [isFilter, setIsFilter] = useState(false); //used to start filtering
-  const isHaveARide = props.isHaveARide;
   var filterResult = [
     {
-      fname: "Jon",
+      fname: "Jon", 
       lname: "Doe",
       from: "Boston",
       to: "UMass",
