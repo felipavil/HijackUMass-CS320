@@ -6,12 +6,12 @@
 -- 1. Insert Two Users
 -----------------------------
 -- Insert a rider
-INSERT INTO users (name, email, phone, role)
-VALUES ('Alice Rider', 'alice.rider@example.com', '555-1234', 'rider');
+INSERT INTO users (name, email, phone,avatar, role)
+VALUES ('Alice Rider', 'alice.rider@example.com',  '555-1234', 'https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' 'rider');
 
 -- Insert a driver
-INSERT INTO users (name, email, phone, role)
-VALUES ('Bob Driver', 'bob.driver@example.com', '555-5678', 'driver');
+INSERT INTO users (name, email, phone,  avatar, role)
+VALUES ('Bob Driver', 'bob.driver@example.com', '555-5678', 'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg', 'driver');
 
 -----------------------------
 -- 2. Create Posts for a Ride Request and a Ride Offer

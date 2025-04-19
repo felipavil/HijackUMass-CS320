@@ -5,6 +5,7 @@ import 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 import Chat from '../components/Chat';
+import ChatList from '../components/ChatList';
 import { useUser } from '../context/UserContext';
 
 export default function PlayGround() {
@@ -13,7 +14,7 @@ export default function PlayGround() {
   return (
     <div className="center-item">
 
-        <Chat/>
+        <ChatList/>
     </div>
   );
 }
