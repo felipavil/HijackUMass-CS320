@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { db } from '../firebase';
+import { useEffect, useState } from "react";
+import { db } from "../firebase";
 import {
   collection,
   addDoc,
@@ -7,39 +7,61 @@ import {
   orderBy,
   onSnapshot,
   serverTimestamp,
-} from 'firebase/firestore';
-import { useUser } from '../context/UserContext'; 
+  getDocs,
+  where,
+} from "firebase/firestore";
+import { useUser } from "../context/UserContext";
 
-
-
-export default function Chat() {
-  const { user } = useUser(); 
-  const [message, setMessage] = useState('');
+export default function Chat({ id }) {
+  const { user } = useUser();
   const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState("");
 
   // Fetch and update messages in real-time
+  console.log("your id", id);
+
   useEffect(() => {
-    const q = query(collection(db, 'messages'), orderBy('createdAt'));
+
+    // const messagesRef = collection(db, "conversations");
+    // const q = query(messagesRef, orderBy("lastUpdated", "desc"));
+    if (!id) return;
+    const q = query(
+      collection(db, "conversations", id, "messages"),
+      orderBy("createdAt", "asc")
+    );
+    console.log("your messages", messages);
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setMessages(snapshot.docs.map((doc) => doc.data()));
     });
+
+    // async function fetchData() {
+    //   console.log("hello");
+
+    //   const snapshot = await getDocs(q);
+    //   snapshot.forEach((doc) => {
+    //     console.log("doc id", doc.id, doc.data());
+    //   });
+    // }
+    // fetchData();
+
     return () => unsubscribe();
-  }, []);
+  }, [id]);
 
   // Send a new message
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!message.trim() || !user) return;
 
-    await addDoc(collection(db, 'messages'), {
-      text: message,
-      uid: user.id,
-      displayName: user.displayName,
-      email: user.emails[0],
-      createdAt: serverTimestamp(),
-    });
+    await addDoc(
+      collection(db, "conversations", id, "messages"),
+      {
+        senderID: "1",
+        createdAt: serverTimestamp(),
+        text: message
+      }
+    );
 
-    setMessage('');
+    setMessage("");
   };
 
   return (
@@ -47,7 +69,7 @@ export default function Chat() {
       <ul className="chat-log">
         {messages.map((msg, i) => (
           <li key={i}>
-            <strong>{msg.displayName}:</strong> {msg.text}
+            <strong>{msg.senderID}:</strong> {msg.text}
           </li>
         ))}
       </ul>
