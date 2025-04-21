@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 import { db } from "../firebase";
 import {
   collection,
@@ -18,19 +18,21 @@ export default function ChatList() {
   const { user } = useUser();
   const [selectedId, setSelectedId] = useState("");
   const [convoList, setConvoList] = useState([]);
+  const [participants, setParticipants] = useState("");
 
   const uid = useRef("");
 
   console.log("user in chatlist", user);
-  const handleConversationClick = (id) => {
-    setSelectedId(id); // For UI highlighting, optional
+  const handleConversationClick = (id, currParticipants) => {
+    setSelectedId(id);
+    setParticipants(currParticipants);
     console.log("i got clicked, my id is", selectedId);
   };
 
   // Fetch and update messages in real-time
   useEffect(() => {
-    if(!user) return;
-    uid.current= user.id === "114322947813948236908" ? "1" : "3"
+    if (!user) return;
+    uid.current = user.id === "114322947813948236908" ? "1" : "3";
     const q = query(
       collection(db, "conversations"),
       where("participants", "array-contains", uid.current),
@@ -42,35 +44,30 @@ export default function ChatList() {
       );
     });
 
-    // async function fetchData() {
-    //   console.log("hello");
-
-    //   const snapshot = await getDocs(q);
-    //   snapshot.forEach((doc) => {
-    //     console.log("doc id", doc.id, doc.data());
-    //   });
-    // }
-    // fetchData();
-
     return () => unsubscribe();
   }, [user]);
 
   return (
-    <>
+    <div className="flex-container chat-list-container">
       <div className="convo-container flex-container-column">
-          {convoList.map((convo) => (
-              <button
-                key={convo.id}
-                onClick={() => handleConversationClick(convo.id)}
-              >
-                <ChatDemo id={convo.id}/>
-              </button>
-          ))}
+        {convoList.map((convo) => (
+          <button
+            key={convo.id}
+            onClick={() =>
+              handleConversationClick(convo.id, convo.data.participants)
+            }
+          >
+            <ChatDemo id={convo.id} />
+          </button>
+        ))}
       </div>
       <div className="message-container">
-        selected id = {selectedId}
-        <Chat id={selectedId} />
+        {!selectedId ? (
+          ""
+        ) : (
+          <Chat id={selectedId} participants={participants} />
+        )}
       </div>
-    </>
+    </div>
   );
 }

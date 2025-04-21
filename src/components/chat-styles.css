@@ -1,12 +1,13 @@
-.chat-grid-container {
-    display: grid;
-    grid-template-columns: 4fr 1fr;
-    gap: 70px;
+.chat-container {
+    width: 60vw;
+    gap: 0px;
+    padding: 5px;
   }
 
 .user-chat{
     display: flex;
     justify-content: right;
+    width: 100%;
     
 }
 
@@ -23,6 +24,8 @@
 .partner-chat{
     display: flex;
     justify-content: left;
+    width: 100%;
+
 }
 
 .partner-chat>.sub-chat{
@@ -34,3 +37,20 @@
     border: 2px solid transparent;
     border-radius: 5px;
 }
+
+.sub-chat{
+    max-width: 500px;
+    text-align: left;
+}
+
+.chat-list-container{
+    align-items: start;
+}
+
+.chat-scroll-window {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+  }

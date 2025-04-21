@@ -15,13 +15,33 @@ import {
 import { useUser } from "../context/UserContext";
 import "./chat-styles.css";
 
-export default function Chat({ id }) {
+function isWithin15Mins(nextTime, currTime) {
+  if (!currTime) {
+    console.log("is false");
+    return false;
+  }
+  if (!nextTime) {
+    return true;
+  }
+  const t1 = currTime.toDate();
+  const t2 = nextTime.toDate();
+
+  const diffInMs = Math.abs(t1 - t2); // time difference in milliseconds
+  const diffInMinutes = diffInMs / (1000 * 60); // convert to minutes
+
+  if (diffInMinutes <= 15) {
+    return true;
+  }
+
+  return false;
+}
+
+export default function Chat({ id, participants }) {
   const { user } = useUser();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const uid = useRef("");
 
-  // const [lastUpdated, setLastUpdated] = useState("something");
 
   // Fetch and update messages in real-time
   console.log("your id", id);
@@ -62,28 +82,36 @@ export default function Chat({ id }) {
   };
 
   return (
-    <div className="chat-container">
-      {messages.map((msg) => (
-        <div className="chat-grid-container">
-          <div
-            className={
-              msg.senderID === uid.current ? "user-chat" : "partner-chat"
-            }
-          >
-            <div className="sub-chat">
-              {" "}
-              {/* <strong>{msg.senderID}:</strong>  */}
-              {msg.text} {"   "} <br />
+    <div>
+      <div> User {participants[participants[0] === uid? 1 : 0]}</div>
+      <div className="chat-scroll-window">
+        {messages.map((msg, index) => (
+          <div className="flex-container-column chat-container ">
+            <div>
+              {isWithin15Mins(
+                msg.createdAt,
+                index > 0 ? messages[index - 1].createdAt : null
+              )
+                ? ""
+                : msg.createdAt?.toDate().toLocaleString("en-US", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+            </div>
+            <div
+              className={
+                msg.senderID === uid.current ? "user-chat" : "partner-chat"
+              }
+            >
+              <div className="sub-chat">
+                {" "}
+                {/* <strong>{msg.senderID}:</strong>  */}
+                {msg.text} {"   "} <br />
+              </div>
             </div>
           </div>
-          <div>
-            {msg.createdAt?.toDate().toLocaleString("en-US", {
-              dateStyle: "medium",
-              timeStyle: "short",
-            })}
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       <form onSubmit={sendMessage}>
         <input
