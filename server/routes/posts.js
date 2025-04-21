@@ -46,8 +46,9 @@ router.get('/', async (req, res) => {
     const values = [];
   
     if (is_rider_post !== undefined) {
+      const isRiderBool = is_rider_post === 'true';
       query += ' WHERE is_rider_post = $1';
-      values.push(is_rider_post === 'true');
+      values.push(isRiderBool);
     }
   
     query += ' ORDER BY created_at DESC';
@@ -59,7 +60,7 @@ router.get('/', async (req, res) => {
       console.error(err);
       res.status(500).json({ error: 'Failed to fetch posts' });
     }
-  });  
+  });
   
 // Get post by ID
 router.get('/:id', async (req, res) => {

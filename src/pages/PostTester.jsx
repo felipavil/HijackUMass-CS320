@@ -26,7 +26,27 @@ export default function PostTester() {
   };
 
   useEffect(() => {
-    fetchPosts();
+    // Rider posts
+    fetch("http://localhost:3000/api/posts?is_rider_post=true", {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) setRiderPosts(data);
+        else console.error("Invalid rider response:", data);
+      })
+      .catch((err) => console.error("Rider fetch error:", err));
+  
+    // Driver posts
+    fetch("http://localhost:3000/api/posts?is_rider_post=false", {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) setDriverPosts(data);
+        else console.error("Invalid driver response:", data);
+      })
+      .catch((err) => console.error("Driver fetch error:", err));
   }, []);
 
   const handleChange = (e) => {
@@ -75,6 +95,10 @@ export default function PostTester() {
       alert("Failed to create post.");
     }
   };
+
+  // Graceful error display in case of issue fetching posts
+  if (!Array.isArray(riderPosts)) return <p>Loading rider posts failed</p>;
+  if (!Array.isArray(driverPosts)) return <p>Loading driver posts failed</p>;
 
   return (
     <div style={{ padding: '2rem' }}>
