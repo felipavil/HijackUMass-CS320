@@ -1,0 +1,36 @@
+.chat-grid-container {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    gap: 70px;
+  }
+
+.user-chat{
+    display: flex;
+    justify-content: right;
+    
+}
+
+.user-chat>.sub-chat{
+    background-color: var(--red);
+    color: var(--white);
+    width: fit-content;
+    padding: 5px 10px;
+    margin: 4px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+}
+
+.partner-chat{
+    display: flex;
+    justify-content: left;
+}
+
+.partner-chat>.sub-chat{
+    background-color: var(--darker-white);
+    color: var(--red);
+    width: fit-content;
+    padding: 5px 10px;
+    margin: 4px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+}

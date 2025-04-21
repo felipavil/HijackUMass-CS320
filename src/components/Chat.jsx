@@ -13,12 +13,14 @@ import {
   doc,
 } from "firebase/firestore";
 import { useUser } from "../context/UserContext";
+import "./chat-styles.css";
 
 export default function Chat({ id }) {
   const { user } = useUser();
-  const senderID = useRef("");
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
+  const uid = useRef("");
+
   // const [lastUpdated, setLastUpdated] = useState("something");
 
   // Fetch and update messages in real-time
@@ -26,8 +28,7 @@ export default function Chat({ id }) {
 
   useEffect(() => {
     if (!id || !user) return;
-    
-    senderID.current = user.id === "114322947813948236908" ? "1" : "3";
+    uid.current = user.id === "114322947813948236908" ? "1" : "3";
 
     const q = query(
       collection(db, "conversations", id, "messages"),
@@ -46,7 +47,7 @@ export default function Chat({ id }) {
     if (!message.trim() || !user) return;
 
     await addDoc(collection(db, "conversations", id, "messages"), {
-      senderID: senderID.current,
+      senderID: uid.current,
       createdAt: serverTimestamp(),
       text: message,
     });
@@ -54,21 +55,35 @@ export default function Chat({ id }) {
     await updateDoc(doc(db, "conversations", id), {
       lastUpdated: serverTimestamp(),
       lastMessage: message,
-      lastSender: senderID.current,
-    })
+      lastSender: uid.current,
+    });
 
     setMessage("");
   };
 
   return (
     <div className="chat-container">
-      <ul className="chat-log">
-        {messages.map((msg, i) => (
-          <li key={i}>
-            <strong>{msg.senderID}:</strong> {msg.text} {"   "} {msg.createdAt?.toDate().toLocaleString()}
-          </li>
-        ))}
-      </ul>
+      {messages.map((msg) => (
+        <div className="chat-grid-container">
+          <div
+            className={
+              msg.senderID === uid.current ? "user-chat" : "partner-chat"
+            }
+          >
+            <div className="sub-chat">
+              {" "}
+              {/* <strong>{msg.senderID}:</strong>  */}
+              {msg.text} {"   "} <br />
+            </div>
+          </div>
+          <div>
+            {msg.createdAt?.toDate().toLocaleString("en-US", {
+              dateStyle: "medium",
+              timeStyle: "short",
+            })}
+          </div>
+        </div>
+      ))}
 
       <form onSubmit={sendMessage}>
         <input
