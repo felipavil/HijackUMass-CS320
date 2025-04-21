@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '../context/UserContext';
-import './styles/post-card-styles.css';
-import './styles/post-inner-card.css';
+import "../components/PostCard/post-card-styles.css";
+import "../components/PostInnerCard/post-inner-card.css";
+
 
 export default function PostTester() {
   const { user } = useUser();
