@@ -6,6 +6,7 @@ CREATE TABLE users (
     phone TEXT,
     role TEXT CHECK (role IN ('rider', 'driver', 'both')),
     rating FLOAT DEFAULT 5.0,
+    avatar TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
