@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { db } from "../firebase";
 import {
   collection,
@@ -9,44 +9,36 @@ import {
   serverTimestamp,
   getDocs,
   where,
+  updateDoc,
+  doc,
 } from "firebase/firestore";
 import { useUser } from "../context/UserContext";
 
 export default function Chat({ id }) {
   const { user } = useUser();
+  const senderID = useRef("");
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
+  // const [lastUpdated, setLastUpdated] = useState("something");
 
   // Fetch and update messages in real-time
   console.log("your id", id);
 
   useEffect(() => {
-    // const messagesRef = collection(db, "conversations");
-    // const q = query(messagesRef, orderBy("lastUpdated", "desc"));
-    if (!id) return;
+    if (!id || !user) return;
+    
+    senderID.current = user.id === "114322947813948236908" ? "1" : "3";
+
     const q = query(
       collection(db, "conversations", id, "messages"),
       orderBy("createdAt", "asc")
     );
-    console.log("your messages", messages);
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setMessages(snapshot.docs.map((doc) => doc.data()));
     });
 
-    // async function fetchData() {
-    //   console.log("hello");
-
-    //   const snapshot = await getDocs(q);
-    //   snapshot.forEach((doc) => {
-    //     console.log("doc id", doc.id, doc.data());
-    //   });
-    // }
-    // fetchData();
-
-    console.log("for testing purpose");
-
     return () => unsubscribe();
-  }, [id]);
+  }, [id, user]);
 
   // Send a new message
   const sendMessage = async (e) => {
@@ -54,12 +46,19 @@ export default function Chat({ id }) {
     if (!message.trim() || !user) return;
 
     await addDoc(collection(db, "conversations", id, "messages"), {
-      senderID: "1",
+      senderID: senderID.current,
       createdAt: serverTimestamp(),
       text: message,
     });
 
+    await updateDoc(doc(db, "conversations", id), {
+      lastUpdated: serverTimestamp(),
+      lastMessage: message,
+      lastSender: senderID.current,
+    })
+
     setMessage("");
+    setLastUpdated( serverTimestamp());
   };
 
   return (
@@ -67,7 +66,7 @@ export default function Chat({ id }) {
       <ul className="chat-log">
         {messages.map((msg, i) => (
           <li key={i}>
-            <strong>{msg.senderID}:</strong> {msg.text}
+            <strong>{msg.senderID}:</strong> {msg.text} {"   "} {msg.createdAt?.toDate().toLocaleString()}
           </li>
         ))}
       </ul>

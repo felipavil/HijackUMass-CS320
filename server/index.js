@@ -36,7 +36,8 @@ passport.use(new GoogleStrategy({
   },
   function (accessToken, refreshToken, profile, done) {
     const email = profile.emails[0].value;
-    if (email.endsWith('@umass.edu')) {
+    if(true){ //swap this with the next line to ACTUALLY verify umass email
+    //if (email.endsWith('@umass.edu')) { 
       return done(null, profile);
     } else {
       return done(null, false, { message: 'Only UMass Amherst emails allowed' });

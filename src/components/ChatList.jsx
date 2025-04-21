@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef} from "react";
 import { db } from "../firebase";
 import {
   collection,
@@ -12,13 +12,14 @@ import {
 } from "firebase/firestore";
 import { useUser } from "../context/UserContext";
 import Chat from "./Chat";
-
-const uid = "1";
+import ChatDemo from "./ChatDemo";
 
 export default function ChatList() {
   const { user } = useUser();
   const [selectedId, setSelectedId] = useState("");
   const [convoList, setConvoList] = useState([]);
+
+  const uid = useRef("");
 
   console.log("user in chatlist", user);
   const handleConversationClick = (id) => {
@@ -28,9 +29,11 @@ export default function ChatList() {
 
   // Fetch and update messages in real-time
   useEffect(() => {
+    if(!user) return;
+    uid.current= user.id === "114322947813948236908" ? "1" : "3"
     const q = query(
       collection(db, "conversations"),
-      where("participants", "array-contains", uid),
+      where("participants", "array-contains", uid.current),
       orderBy("lastUpdated", "desc")
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -50,25 +53,19 @@ export default function ChatList() {
     // fetchData();
 
     return () => unsubscribe();
-  }, []);
+  }, [user]);
 
   return (
     <>
-      <div className="convo-container">
-        <ul className="convo-log">
-          {convoList.map((convo, i) => (
-            <li key={i}>
+      <div className="convo-container flex-container-column">
+          {convoList.map((convo) => (
               <button
                 key={convo.id}
                 onClick={() => handleConversationClick(convo.id)}
               >
-                {console.log(convo.data)}
-                <strong>{convo.data.participants[1]}:</strong>{" "}
-                {convo.data.lastMessage}
+                <ChatDemo id={convo.id}/>
               </button>
-            </li>
           ))}
-        </ul>
       </div>
       <div className="message-container">
         selected id = {selectedId}
