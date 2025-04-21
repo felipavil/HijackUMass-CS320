@@ -1,59 +1,45 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useUser } from '../context/UserContext';
+import './styles/post-card-styles.css';
+import './styles/post-inner-card.css';
 
 export default function PostTester() {
+  const { user } = useUser();
+
+  const [postType, setPostType] = useState("have"); // "have" = driver
+  const [formData, setFormData] = useState({
+    place_from: "",
+    place_to: "",
+    time_from: "",
+    time_to: "",
+    seats_needed: "",
+    available_seats: "",
+  });
+
   const [riderPosts, setRiderPosts] = useState([]);
   const [driverPosts, setDriverPosts] = useState([]);
 
-  const [formData, setFormData] = useState({
-    user_id: '',
-    place_from: '',
-    place_to: '',
-    time_from: '',
-    time_to: '',
-    is_rider_post: true,
-    seats_needed: '',
-    available_seats: '',
-  });
+  const isRider = postType === "need";
 
   const fetchPosts = () => {
-    fetch("http://localhost:3000/api/posts?is_rider_post=true", { credentials: "include" })
+    fetch("http://localhost:3000/api/posts?is_rider_post=true")
       .then((res) => res.json())
-      .then((data) => setRiderPosts(data));
+      .then((data) => setRiderPosts(Array.isArray(data) ? data : []));
 
-    fetch("http://localhost:3000/api/posts?is_rider_post=false", { credentials: "include" })
+    fetch("http://localhost:3000/api/posts?is_rider_post=false")
       .then((res) => res.json())
-      .then((data) => setDriverPosts(data));
+      .then((data) => setDriverPosts(Array.isArray(data) ? data : []));
   };
 
   useEffect(() => {
-    // Rider posts
-    fetch("http://localhost:3000/api/posts?is_rider_post=true", {
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) setRiderPosts(data);
-        else console.error("Invalid rider response:", data);
-      })
-      .catch((err) => console.error("Rider fetch error:", err));
-  
-    // Driver posts
-    fetch("http://localhost:3000/api/posts?is_rider_post=false", {
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) setDriverPosts(data);
-        else console.error("Invalid driver response:", data);
-      })
-      .catch((err) => console.error("Driver fetch error:", err));
+    fetchPosts();
   }, []);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    const { name, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value,
     }));
   };
 
@@ -61,14 +47,14 @@ export default function PostTester() {
     e.preventDefault();
 
     const payload = {
-      user_id: Number(formData.user_id),
+      user_id: 1, // hardcoded for now – you can replace this with user context ID
       place_from: formData.place_from,
       place_to: formData.place_to,
       time_from: formData.time_from,
       time_to: formData.time_to || null,
-      is_rider_post: formData.is_rider_post,
-      available_seats: formData.is_rider_post ? null : Number(formData.available_seats),
-      seats_needed: formData.is_rider_post ? Number(formData.seats_needed) : null,
+      is_rider_post: isRider,
+      available_seats: isRider ? null : Number(formData.available_seats),
+      seats_needed: isRider ? Number(formData.seats_needed) : null,
     };
 
     const res = await fetch("http://localhost:3000/api/posts", {
@@ -80,73 +66,72 @@ export default function PostTester() {
 
     if (res.ok) {
       alert("Post created!");
-      fetchPosts();
       setFormData({
-        user_id: '',
-        place_from: '',
-        place_to: '',
-        time_from: '',
-        time_to: '',
-        is_rider_post: true,
-        seats_needed: '',
-        available_seats: '',
+        place_from: "",
+        place_to: "",
+        time_from: "",
+        time_to: "",
+        seats_needed: "",
+        available_seats: "",
       });
+      fetchPosts();
     } else {
       alert("Failed to create post.");
     }
   };
 
-  // Graceful error display in case of issue fetching posts
-  if (!Array.isArray(riderPosts)) return <p>Loading rider posts failed</p>;
-  if (!Array.isArray(driverPosts)) return <p>Loading driver posts failed</p>;
-
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>🛠 Post Tester</h1>
+    <div style={{ padding: "2rem" }}>
+      <div className="flex-container-filter align-center">
+        <div className="filter-container small-font post-card-container">
+          I{" "}
+          <select value={postType} onChange={(e) => setPostType(e.target.value)}>
+            <option value="have">HAVE</option>
+            <option value="need">NEED</option>
+          </select>{" "}
+          A RIDE
+        </div>
+      </div>
 
-      <form onSubmit={handleSubmit} style={{ marginBottom: '2rem' }}>
-        <h2>Create a Post</h2>
-        <label>User ID:
-          <input type="number" name="user_id" value={formData.user_id} onChange={handleChange} required />
-        </label>
-        <br />
-        <label>From:
-          <input type="text" name="place_from" value={formData.place_from} onChange={handleChange} required />
-        </label>
-        <br />
-        <label>To:
-          <input type="text" name="place_to" value={formData.place_to} onChange={handleChange} required />
-        </label>
-        <br />
-        <label>Time From:
+      <form className="post-form small-font flex-container-column" onSubmit={handleSubmit}>
+        <div className="form-grid">
+          <label htmlFor="place_from">From:</label>
+          <input name="place_from" value={formData.place_from} onChange={handleChange} required />
+
+          <label htmlFor="place_to">To:</label>
+          <input name="place_to" value={formData.place_to} onChange={handleChange} required />
+        </div>
+
+        <div className="form-grid">
+          <label htmlFor="time_from">Time From:</label>
           <input type="time" name="time_from" value={formData.time_from} onChange={handleChange} required />
-        </label>
-        <br />
-        <label>Time To:
+
+          <label htmlFor="time_to">Time To:</label>
           <input type="time" name="time_to" value={formData.time_to} onChange={handleChange} />
-        </label>
-        <br />
-        <label>
-          <input type="checkbox" name="is_rider_post" checked={formData.is_rider_post} onChange={handleChange} />
-          Rider Post?
-        </label>
-        <br />
-        {formData.is_rider_post ? (
-          <label>Seats Needed:
-            <input type="number" name="seats_needed" value={formData.seats_needed} onChange={handleChange} required />
-          </label>
-        ) : (
-          <label>Available Seats:
-            <input type="number" name="available_seats" value={formData.available_seats} onChange={handleChange} required />
-          </label>
-        )}
-        <br />
-        <button type="submit">Create Post</button>
+        </div>
+
+        <div className="form-grid">
+          {isRider ? (
+            <>
+              <label htmlFor="seats_needed">Seats Needed:</label>
+              <input type="number" name="seats_needed" value={formData.seats_needed} onChange={handleChange} required />
+            </>
+          ) : (
+            <>
+              <label htmlFor="available_seats">Available Seats:</label>
+              <input type="number" name="available_seats" value={formData.available_seats} onChange={handleChange} required />
+            </>
+          )}
+        </div>
+
+        <input type="submit" value="Publish!" className="red-button" />
       </form>
+
+      <hr style={{ margin: "2rem 0" }} />
 
       <h2>Rider Posts</h2>
       <ul>
-        {riderPosts.map(post => (
+        {riderPosts.map((post) => (
           <li key={post.post_id}>
             {post.place_from} → {post.place_to} (needs {post.seats_needed})
           </li>
@@ -155,7 +140,7 @@ export default function PostTester() {
 
       <h2>Driver Posts</h2>
       <ul>
-        {driverPosts.map(post => (
+        {driverPosts.map((post) => (
           <li key={post.post_id}>
             {post.place_from} → {post.place_to} (seats: {post.available_seats})
           </li>
