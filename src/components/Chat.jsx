@@ -58,7 +58,6 @@ export default function Chat({ id }) {
     })
 
     setMessage("");
-    setLastUpdated( serverTimestamp());
   };
 
   return (
