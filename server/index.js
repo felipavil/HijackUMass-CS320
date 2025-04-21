@@ -5,6 +5,8 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import usersRouter from './routes/users.js';
+import postsRouter from './routes/posts.js';
 
 dotenv.config();
 
@@ -51,6 +53,9 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((obj, done) => {
   done(null, obj);
 });
+
+app.use('/api/users', usersRouter);
+app.use('/api/posts', postsRouter);
 
 // Routes
 app.get('/auth/google',
