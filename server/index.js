@@ -19,6 +19,9 @@ app.use(cors({
   credentials: true,
 }));
 
+// Enable JSON use
+app.use(express.json());
+
 // Express session
 app.use(session({
   secret: 'your-secret-key',
@@ -54,6 +57,7 @@ passport.deserializeUser((obj, done) => {
   done(null, obj);
 });
 
+// Routes for backend API
 app.use('/api/users', usersRouter);
 app.use('/api/posts', postsRouter);
 
