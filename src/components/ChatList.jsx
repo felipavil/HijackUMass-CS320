@@ -11,7 +11,7 @@ import {
   where,
 } from "firebase/firestore";
 import { useUser } from "../context/UserContext";
-import Chat from "./Chat";
+import ChatWindow from "./ChatWindow";
 import ChatDemo from "./ChatDemo";
 
 export default function ChatList() {
@@ -26,7 +26,6 @@ export default function ChatList() {
   const handleConversationClick = (id, currParticipants) => {
     setSelectedId(id);
     setParticipants(currParticipants);
-    console.log("i got clicked, my id is", selectedId);
   };
 
   // Fetch and update messages in real-time
@@ -65,7 +64,9 @@ export default function ChatList() {
         {!selectedId ? (
           ""
         ) : (
-          <Chat id={selectedId} participants={participants} />
+          <div className="chat-fullpage-wrapper">
+            <ChatWindow id={selectedId} participants={participants} />
+          </div>
         )}
       </div>
     </div>

@@ -12,8 +12,26 @@ import {
   doc,
 } from "firebase/firestore";
 import { useUser } from "../context/UserContext";
-import Chat from "./Chat";
+import Chat from "./ChatWindow";
 
+function formatRelativeTime(date) {
+    const now = new Date();
+    const diff = Math.floor((now - new Date(date)) / 1000); // in seconds
+  
+    const minutes = Math.floor(diff / 60);
+    const hours = Math.floor(diff / 3600);
+    const days = Math.floor(diff / 86400);
+    const weeks = Math.floor(diff / (86400 * 7));
+    const years = Math.floor(diff / (86400 * 365));
+  
+    if (diff < 60) return `${diff}s`;
+    if (minutes < 60) return `${minutes}m`;
+    if (hours < 24) return `${hours}h`;
+    if (days < 7) return `${days}d`;
+    if (weeks < 52) return `${weeks}w`;
+    return `${years}y`;
+  }
+  
 export default function ChatDemo({ id }) {
   const { user } = useUser();
   const uid = useRef("");
@@ -32,10 +50,7 @@ export default function ChatDemo({ id }) {
       if (docSnapshot.exists()) {
         const data = docSnapshot.data();
         setLastUpdated(
-          data.lastUpdated?.toDate().toLocaleString("en-US", {
-            dateStyle: "medium",
-            timeStyle: "short",
-          })
+          data.lastUpdated?.toDate()
         );
         setLastMessage(data.lastMessage);
         setLastSender(data.lastSender);
@@ -54,9 +69,9 @@ export default function ChatDemo({ id }) {
         {participants.current[participants.current[0] === uid.current ? 1 : 0]}:
       </strong>{" "}
       {uid.current === lastSender ? "You: " : ""}
-      {lastMessage}
-      {"  "}
-      {lastUpdated}
+      {lastMessage.slice(0, 25)}
+      {" ~ "}
+      {formatRelativeTime(lastUpdated)}
     </>
   );
 }

@@ -36,15 +36,14 @@ function isWithin15Mins(nextTime, currTime) {
   return false;
 }
 
-export default function Chat({ id, participants }) {
+export default function ChatDisplay({ id }) {
   const { user } = useUser();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const uid = useRef("");
-
+  const endRef = useRef(null);
 
   // Fetch and update messages in real-time
-  console.log("your id", id);
 
   useEffect(() => {
     if (!id || !user) return;
@@ -61,29 +60,17 @@ export default function Chat({ id, participants }) {
     return () => unsubscribe();
   }, [id, user]);
 
-  // Send a new message
-  const sendMessage = async (e) => {
-    e.preventDefault();
-    if (!message.trim() || !user) return;
-
-    await addDoc(collection(db, "conversations", id, "messages"), {
-      senderID: uid.current,
-      createdAt: serverTimestamp(),
-      text: message,
-    });
-
-    await updateDoc(doc(db, "conversations", id), {
-      lastUpdated: serverTimestamp(),
-      lastMessage: message,
-      lastSender: uid.current,
-    });
-
-    setMessage("");
-  };
+  // Scroll to the end of message window to show the latest message
+  useEffect(() => {
+    const scrollParent = endRef.current?.parentElement;
+    if (endRef.current && scrollParent) {
+      scrollParent.scrollTop = scrollParent.scrollHeight;
+    }
+  }, [messages]);
+  
 
   return (
-    <div>
-      <div> User {participants[participants[0] === uid? 1 : 0]}</div>
+    <div className="chat-wrapper">
       <div className="chat-scroll-window">
         {messages.map((msg, index) => (
           <div className="flex-container-column chat-container ">
@@ -104,23 +91,14 @@ export default function Chat({ id, participants }) {
               }
             >
               <div className="sub-chat">
-                {" "}
-                {/* <strong>{msg.senderID}:</strong>  */}
-                {msg.text} {"   "} <br />
+                {msg.text}
+                <br />
               </div>
             </div>
           </div>
         ))}
+        <div ref={endRef}></div>
       </div>
-
-      <form onSubmit={sendMessage}>
-        <input
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type a message..."
-        />
-        <button type="submit">Send</button>
-      </form>
     </div>
   );
 }
