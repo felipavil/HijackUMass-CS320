@@ -48,14 +48,14 @@ export default function PostTester() {
     e.preventDefault();
 
     const payload = {
-      user_id: 1, // hardcoded for now – you can replace this with user context ID
+      user_id: 1, // hardcoded for now, can replace later
       place_from: formData.place_from,
       place_to: formData.place_to,
       time_from: formData.time_from,
       time_to: formData.time_to || null,
       is_rider_post: isRider,
-      available_seats: isRider ? null : Number(formData.available_seats),
-      seats_needed: isRider ? Number(formData.seats_needed) : null,
+      available_seats: isRider ? null : formData.available_seats ? Number(formData.available_seats) : null,
+      seats_needed: isRider ? (formData.seats_needed ? Number(formData.seats_needed) : null) : null,
     };
 
     const res = await fetch("http://localhost:3000/api/posts", {

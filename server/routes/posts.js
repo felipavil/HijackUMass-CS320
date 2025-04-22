@@ -32,9 +32,9 @@ router.post('/', async (req, res) => {
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to create post' });
-  }
+    console.error("Post creation error:", err.message, err.stack); // <- improved error logging
+    res.status(500).json({ error: err.message }); // <- send message to frontend too
+  }  
 });
 
 
