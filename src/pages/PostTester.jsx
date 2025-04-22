@@ -77,7 +77,9 @@ export default function PostTester() {
       });
       fetchPosts();
     } else {
-      alert("Failed to create post.");
+        const data = await res.json();
+        console.error("Post failed:", data);
+        alert(`Failed to create post:\n${data.error || 'Unknown error'}`);
     }
   };
 
