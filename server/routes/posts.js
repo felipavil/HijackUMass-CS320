@@ -23,8 +23,8 @@ router.post('/', async (req, res) => {
         user_id,
         place_from,
         place_to,
-        time_from,
-        time_to,
+        time_from,  // NEED TO CHANGE TO TIMESTAMP FORMAT
+        time_to,    // DITTO
         is_rider_post,
         available_seats,
         seats_needed

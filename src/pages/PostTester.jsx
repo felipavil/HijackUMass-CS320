@@ -11,7 +11,7 @@ export default function PostTester() {
   const [formData, setFormData] = useState({
     place_from: "",
     place_to: "",
-    time_from: "",
+    time_from: "",  // NEED TO ADD 'date_from/to' FIELDS OR SOMETHING SIMILAR
     time_to: "",
     seats_needed: "",
     available_seats: "",
@@ -51,8 +51,8 @@ export default function PostTester() {
       user_id: 1, // hardcoded for now, can replace later
       place_from: formData.place_from,
       place_to: formData.place_to,
-      time_from: formData.time_from,
-      time_to: formData.time_to || null,
+      time_from: formData.time_from,      // MAKE TIMESTAMP BY FUSING DATE+TIME FIELDS
+      time_to: formData.time_to || null,  // DITTO
       is_rider_post: isRider,
       available_seats: isRider ? null : formData.available_seats ? Number(formData.available_seats) : null,
       seats_needed: isRider ? (formData.seats_needed ? Number(formData.seats_needed) : null) : null,
