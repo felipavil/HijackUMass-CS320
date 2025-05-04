@@ -49,5 +49,70 @@ router.get('/:id', async (req, res) => {
       res.status(500).json({ error: 'Failed to fetch user' });
     }
   });
-    
+
+// Get all drivers
+router.get('/drivers', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT * FROM users WHERE role = 'driver' ORDER BY created_at DESC`
+    );
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch drivers' });
+  }
+});
+
+// Get specific driver by ID
+router.get('/drivers/:id', async (req, res) => {
+  const driverId = req.params.id;
+
+  try {
+    const result = await pool.query(
+      `SELECT * FROM users WHERE user_id = $1 AND role = 'driver'`,
+      [driverId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Driver not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch driver profile' });
+  }
+});
+   
+// Get all riders
+router.get('/riders', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT * FROM users WHERE role = 'rider' ORDER BY created_at DESC`
+    );
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch riders' });
+  }
+});
+
+// Get specific rider by ID
+router.get('/riders/:id', async (req, res) => {
+  const riderId = req.params.id;
+
+  try {
+    const result = await pool.query(
+      `SELECT * FROM users WHERE user_id = $1 AND role = 'rider'`,
+      [riderId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Rider not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch rider profile' });
+  }
+});
+
+
 export default router;
