@@ -1,96 +1,144 @@
-// server/index.js
-import express from 'express';
-import session from 'express-session';
-import passport from 'passport';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import usersRouter from './routes/users.js';
-import postsRouter from './routes/posts.js';
-
-dotenv.config();
+const express = require('express');
+const cors = require('cors');
+const { Pool } = require('pg');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const authenticateToken = require('./authMiddleware');
+const { OAuth2Client } = require('google-auth-library');
+require('dotenv').config();
 
 const app = express();
-const PORT = 3000; // Backend port
+const port = process.env.PORT || 4000;
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
 
-// Enable CORS for React frontend
-app.use(cors({
-  origin: 'http://localhost:5173', // React frontend URL
-  credentials: true,
-}));
+// PostgreSQL pool setup
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
-// Enable JSON use
+// Google OAuth2 setup
+const googleClient = new OAuth2Client();
+
+// Middleware
+app.use(cors());
 app.use(express.json());
 
-// Express session
-app.use(session({
-  secret: 'your-secret-key',
-  resave: false,
-  saveUninitialized: false,
-}));
+// Test route
+app.get('/api/ping', async (req, res) => {
+  try {
+    const dbRes = await pool.query('SELECT NOW()');
+    res.json({ msg: 'pong', time: dbRes.rows[0].now });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'DB error' });
+  }
+});
 
-// Initialize Passport
-app.use(passport.initialize());
-app.use(passport.session());
+// Signup route
+app.post('/api/signup', async (req, res) => {
+  const { name, email, password } = req.body;
 
-// Passport config
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/auth/google/callback",
-  },
-  function (accessToken, refreshToken, profile, done) {
-    const email = profile.emails[0].value;
-    if(true){ //swap this with the next line to ACTUALLY verify umass email
-    //if (email.endsWith('@umass.edu')) { 
-      return done(null, profile);
+  if (!email.endsWith('@umass.edu')) {
+    return res.status(400).json({ error: 'Only @umass.edu emails allowed' });
+  }
+
+  try {
+    const hashed = await bcrypt.hash(password, 10);
+    const result = await pool.query(
+      'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email',
+      [name, email, hashed]
+    );
+
+    const user = result.rows[0];
+    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '2h' });
+
+    res.json({ token, user });
+  } catch (err) {
+    console.error(err);
+    if (err.code === '23505') {
+      res.status(409).json({ error: 'Email already registered' });
     } else {
-      return done(null, false, { message: 'Only UMass Amherst emails allowed' });
+      res.status(500).json({ error: 'Signup failed' });
     }
   }
-));
-
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-passport.deserializeUser((obj, done) => {
-  done(null, obj);
 });
 
-// Routes for backend API
-app.use('/api/users', usersRouter);
-app.use('/api/posts', postsRouter);
+// Login route
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    const user = result.rows[0];
+
+    if (!user) return res.status(401).json({ error: 'Invalid email or password' });
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return res.status(401).json({ error: 'Invalid email or password' });
+
+    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '2h' });
+
+    res.json({ token, user: { id: user.id, email: user.email, name: user.name } });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+// Google login route
+app.post('/api/google-login', async (req, res) => {
+  const { id_token } = req.body;
+
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: id_token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { email, name } = payload;
+
+    if (!email.endsWith('@umass.edu')) {
+      return res.status(403).json({ error: 'Only @umass.edu emails allowed' });
+    }
+
+    const existing = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    let user;
+
+    if (existing.rows.length > 0) {
+      user = existing.rows[0];
+    } else {
+      const insert = await pool.query(
+        'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *',
+        [name, email, 'google-oauth']
+      );
+      user = insert.rows[0];
+    }
+
+    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '2h' });
+
+    res.json({ token, user: { id: user.id, email: user.email, name: user.name } });
+
+  } catch (err) {
+    console.error('Google Login Error:', err);
+    res.status(401).json({ error: 'Invalid Google token' });
+  }
+});
 
 // Routes
-app.get('/auth/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] }));
+const postsRoutes = require('./routes/posts');
+app.use(postsRoutes);
 
-app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: 'http://localhost:3000/fail-log-in' }),
-  (req, res) => {
-    res.redirect('http://localhost:5173'); // Redirect to your React home
-  }
-);
+const messageRoutes = require('./routes/messages');
+app.use('/api/messages', messageRoutes);
 
-// API to check if user is authenticated
-app.get('/api/authenticated', (req, res) => {
-  if (req.isAuthenticated()) {
-    res.json({ authenticated: true, user: req.user });
-  } else {
-    res.json({ authenticated: false });
-  }
-});
+const confirmRoutes = require('./routes/confirm');
+app.use('/api/confirm', confirmRoutes);
 
-// Logout route
-app.get('/logout', (req, res) => {
-  req.logout(() => {
-    res.redirect('http://localhost:5173');
-  });
-});
-
-app.get('/fail-log-in', (req, res)=>{
-  res.redirect("http://localhost:5173/fail-log-in")
-})
+const reviewRoutes = require('./routes/reviews');
+app.use('/api/reviews', reviewRoutes);
 
 // Start server
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(port, () => {
+  console.log(`🚀 Server running at http://localhost:${port}`);
+});
