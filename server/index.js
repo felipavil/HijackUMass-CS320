@@ -5,6 +5,10 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import usersRouter from './routes/users.js';
+import postsRouter from './routes/posts.js';
+import matchesRouter from './routes/matches.js';
+import reviewsRouter from './routes/reviews.js';
 
 dotenv.config();
 
@@ -16,6 +20,9 @@ app.use(cors({
   origin: 'http://localhost:5173', // React frontend URL
   credentials: true,
 }));
+
+// Enable JSON use
+app.use(express.json());
 
 // Express session
 app.use(session({
@@ -51,6 +58,12 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((obj, done) => {
   done(null, obj);
 });
+
+// Routes for backend API
+app.use('/api/users', usersRouter);
+app.use('/api/posts', postsRouter);
+app.use('/api/matches', matchesRouter);
+app.use('/api/reviews', reviewsRouter);
 
 // Routes
 app.get('/auth/google',

@@ -13,7 +13,7 @@ import NavBar from "./components/NavBar/NavBar";
 import FailLogin from "./pages/FailLogin";
 import { useUser } from "./context/UserContext";
 import PlayGround from "./pages/PlayGround";
-
+import PostTester from "./pages/PostTester";
 
 function App() {
   return (
@@ -49,7 +49,7 @@ function AppRoutes() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/fail-log-in" element={<FailLogin />} />
         <Route path="/play-ground" element={<PlayGround />} />
-
+        <Route path="/test-posts" element={<PostTester />} />
       </Routes>
 
       <Footer />
