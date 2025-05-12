@@ -2,14 +2,6 @@
 
 A rideshare-style web app for UMass Amherst students to coordinate carpooling — whether you **need a ride** or **have a ride to offer**.
 
-## 🔧 Tech Stack
-
-- **Frontend**: React (Vite)
-- **Backend**: Node.js + Express
-- More to come ;)
-
----
-
 ## 🚀 Project Overview
 
 - **Server** (in `/server`):
