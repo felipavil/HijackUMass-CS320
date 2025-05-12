@@ -3,6 +3,70 @@ import pool from '../db/pool.js';
 
 const router = express.Router();
 
+
+// Create a new match
+router.post('/', async (req, res) => {
+    const {
+      rider_post_id,
+      driver_post_id,
+      estimated_duration,
+      estimated_distance,
+      message
+    } = req.body;
+  
+    try {
+      const result = await pool.query(
+        `INSERT INTO matches (
+          rider_post_id,
+          driver_post_id,
+          estimated_duration,
+          estimated_distance,
+          message,
+          status,
+          is_temporary,
+          is_visible
+        ) VALUES ($1, $2, $3, $4, $5, 'pending', TRUE, TRUE)
+        RETURNING *`,
+        [
+          rider_post_id,
+          driver_post_id,
+          estimated_duration,
+          estimated_distance,
+          message
+        ]
+      );
+  
+      res.status(201).json(result.rows[0]);
+    } catch (err) {
+      console.error('Error creating match:', err);
+      res.status(500).json({ error: 'Failed to create match' });
+    }
+  });
+
+  // confirm a match: make it permanent (is_temporary -> false)
+  router.put('/:matchId/confirm', async (req, res) => {
+    const { matchId } = req.params;
+  
+    try {
+      const result = await pool.query(
+        `UPDATE matches
+         SET is_temporary = FALSE
+         WHERE match_id = $1
+         RETURNING *`,
+        [matchId]
+      );
+  
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'Match not found' });
+      }
+  
+      res.json({ message: 'Match confirmed', match: result.rows[0] });
+    } catch (err) {
+      console.error('Error confirming match:', err);
+      res.status(500).json({ error: 'Failed to confirm match' });
+    }
+  });
+
 // fetch matches for a driver
 router.get('/driver/:user_id', async (req, res) => {
   const { user_id } = req.params;
