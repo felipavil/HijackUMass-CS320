@@ -157,6 +157,16 @@ const ChatPage = () => {
     }
   }, [messages]);
 
+  useEffect(() => {
+    if (!post || !recipient) return;
+  
+    const interval = setInterval(() => {
+      fetchMessages();
+    }, 2000); // 1s or 2s polling
+  
+    return () => clearInterval(interval);
+  }, [post, recipient]);
+
   const sendMessage = async () => {
     if (!input.trim() || !recipient) return;
 
