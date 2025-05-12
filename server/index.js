@@ -7,6 +7,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import usersRouter from './routes/users.js';
 import postsRouter from './routes/posts.js';
+import matchesRouter from './routes/matches.js';
+import reviewsRouter from './routes/reviews.js';
 
 dotenv.config();
 
@@ -60,6 +62,8 @@ passport.deserializeUser((obj, done) => {
 // Routes for backend API
 app.use('/api/users', usersRouter);
 app.use('/api/posts', postsRouter);
+app.use('/api/matches', matchesRouter);
+app.use('/api/reviews', reviewsRouter);
 
 // Routes
 app.get('/auth/google',
