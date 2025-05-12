@@ -85,11 +85,10 @@ psql -U hijack_user -d hijack_db -f schema/hijack_schema.sql
 ### `/server/.env`:
 
 ```env
-DATABASE_URL=postgres://hijack_user:hijack_pass@localhost:5432/hijack_db
-JWT_SECRET=your_jwt_secret_here
-CLIENT_URL=http://localhost:5173
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=517363244279-8qq1v80fde6660d12b0v8l2pl0cf4gtv.apps.googleusercontent.com
+DATABASE_URL=postgresql://hijack_user:hijack_pass@localhost:5432/hijack_db
+PORT=4000
+JWT_SECRECT=super_secret_jwt_for_dev
+GOOGLE_CLIENT_ID=517363244279-8qq1v80fde6660d12b0v8l2pl0cf4gtv.apps.googleusercontent.com
 ```
 
 ### `/client/.env`:
