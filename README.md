@@ -164,4 +164,4 @@ Your app will be fully functional at `http://localhost:5173`!
  
 ## 🙏 Attributions
 
-- Initial architecture/management suggestions, and help with later backend code logic were developed with the assistance of ChatGpt.
+- Initial architecture/management suggestions, and help with later backend code logic were developed with the assistance of ChatGPT.
