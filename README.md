@@ -1,3 +1,5 @@
+# Github Link: https://github.com/felipavil/HijackUMass-CS320
+
 # 🚗 HijackUMass
 
 A rideshare-style web app for UMass Amherst students to coordinate carpooling — whether you **need a ride** or **have a ride to offer**.
@@ -20,6 +22,18 @@ A rideshare-style web app for UMass Amherst students to coordinate carpooling �
 - Node.js v18+ & npm
 - PostgreSQL v13+
 - Vite
+
+In `/client`, run:
+```bash
+npm install react react-dom react-router-dom
+npm install @react-oauth/google jwt-decode
+npm install --save-dev vite @vitejs/plugin-react
+```
+In `/server`, run:
+```bash
+npm install express cors jsonwebtoken bcrypt pg dotenv express-rate-limit
+npm install --save-dev nodemon
+```
 
 ## 1. Install & Start PostgreSQL
 
@@ -88,13 +102,13 @@ psql -U hijack_user -d hijack_db -f schema/hijack_schema.sql
 DATABASE_URL=postgresql://hijack_user:hijack_pass@localhost:5432/hijack_db
 PORT=4000
 JWT_SECRECT=super_secret_jwt_for_dev
-GOOGLE_CLIENT_ID=517363244279-8qq1v80fde6660d12b0v8l2pl0cf4gtv.apps.googleusercontent.com
+GOOGLE_CLIENT_ID=contact_creator_for_ID
 ```
 
 ### `/client/.env`:
 
 ```env
-VITE_GOOGLE_CLIENT_ID=517363244279-8qq1v80fde6660d12b0v8l2pl0cf4gtv.apps.googleusercontent.com
+VITE_GOOGLE_CLIENT_ID=contact_creator_for_ID
 ```
 
 ---
@@ -120,18 +134,34 @@ npm run dev
 
 ## ❓ Troubleshooting
 
-- **FATAL: role “hijack_user” does not exist**  
+- **FATAL: role “hijack_user” does not exist** 
   → Create the role and DB exactly as shown above.
 
-- **Permission denied for table**  
+- **Permission denied for table** 
   → Run the GRANT statements to give full privileges.
 
-- **JWT or Google client issues**  
+- **JWT or Google client issues** 
   → Check that `.env` files are correctly filled out.
 
-- **CORS or fetch errors**  
+- **CORS or fetch errors**
   → Ensure `CLIENT_URL` in the server `.env` matches the Vite port.
 
 ---
 
 Your app will be fully functional at `http://localhost:5173`!
+
+## ⚠️ Known Bugs or Limitations
+ - No deployment - app only runs locally
+ - No dedicated Ride Matching UI, but works in the backend(for ease in future improvement)
+ - No email verification (Would need a valid email verifier)
+ - Review system is simplified for demo. No dedicated way to view reviews for a user unless a post is made.
+ - Chat system has 2 second latency, and is not efficient.
+ - Users do not get notified if a new message is sent
+ - Input validation could be much better
+ - For demo sake, time parameter check was removed from code for being able to post reviews.
+ - In general, app was not designed for prioritizing total security against adversaries.
+ - No payment feature
+ 
+## 🙏 Attributions
+
+- Initial architecture/management suggestions, and help with later backend code logic were developed with the assistance of ChatGpt.
